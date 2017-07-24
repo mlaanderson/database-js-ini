@@ -1,0 +1,27 @@
+{
+  "name": "database-js-ini",
+  "version": "1.0.0",
+  "description": "database-js wrapper for INI files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlaanderson/database-js-ini.git"
+  },
+  "keywords": [
+    "database-js",
+    "ini"
+  ],
+  "author": "Michael Anderson <michael@anderson-clan.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mlaanderson/database-js-ini/issues"
+  },
+  "homepage": "https://github.com/mlaanderson/database-js-ini#readme",
+  "dependencies": {
+    "ini": "^1.3.4",
+    "node-sqlparser": "^1.0.2"
+  }
+}
