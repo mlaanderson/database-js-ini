@@ -47,7 +47,13 @@ class IniFile {
 
     chooseFields(sqlObj, data, row) {
         if (sqlObj.columns === "*") {
-            data.push(row);
+            let result = {};
+            for (let key in row) {
+                if (typeof row[key] !== 'object') {
+                    result[key] = row[key];
+                }
+            }
+            data.push(result);
             return;
         }
 
@@ -128,14 +134,14 @@ class IniFile {
 
     doUpdate(resolve, reject, sqlObj) {
         let iniScope;
-        if (sqlObj.from[0].table === "ROOT") {
+        if (sqlObj.table === "ROOT") {
             iniScope = this[m_data];
         } else {
             iniScope = this[m_data][sqlObj.table];
         }
 
-        for (let key in sqlObj.set) {
-            iniScope[key] = sqlObj.set[key].value.value;
+        for (let field of sqlObj.set) {
+            iniScope[field.column] = ini.safe(field.value.value);
         }
 
         fs.writeFile(this[m_filename], ini.encode(this[m_data]), (err) => {
@@ -150,27 +156,29 @@ class IniFile {
     runSQL(sql) {
         var self = this;
         return new Promise((resolve, reject) => {
-            this[m_authenticator].then(() => {
-                // we are now authenticated
-                let sqlObj;
-                try {
-                    sqlObj = parse(sql);
-                } catch (err) {
+            let sqlObj;
+            try {
+                sqlObj = parse(sql);
+            } catch (err) {
+                if (/^UPDATE/i.test(sql) && !(/WHERE/i.test(sql))) {
+                    sqlObj = parse(sql + ' WHERE true = true');
+                } else {
                     reject(err);
+                    return;
                 }
+            }
 
-                switch(sqlObj.type) {
-                    case 'select':
-                        this.doSelect(resolve, reject, sqlObj);
-                        break;
-                    case 'update':
-                        this.doUpdate(resolve, reject, sqlObj);
-                        break;
-                    default:
-                        reject("Unsupported SQL");
-                        break;
-                }
-            });
+            switch(sqlObj.type) {
+                case 'select':
+                    this.doSelect(resolve, reject, sqlObj);
+                    break;
+                case 'update':
+                    this.doUpdate(resolve, reject, sqlObj);
+                    break;
+                default:
+                    reject("Unsupported SQL");
+                    break;
+            }
         });
     }
 
