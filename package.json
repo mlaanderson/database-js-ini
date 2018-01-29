@@ -1,6 +1,6 @@
 {
   "name": "database-js-ini",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "database-js wrapper for INI files",
   "main": "index.js",
   "scripts": {
