@@ -1,5 +1,4 @@
 # database-js-ini
-# database-js-firebase
 [![Build Status](https://travis-ci.org/mlaanderson/database-js-ini.svg?branch=master)](https://travis-ci.org/mlaanderson/database-js-ini)
 
 Database-js Wrapper for INI files
